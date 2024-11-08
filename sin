@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微信个性签名</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .signature-container {
+            text-align: center;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            width: 80%;
+            max-width: 600px; /* 限制容器最大宽度 */
+        }
+        .signature {
+            font-size: 24px;
+            color: #333;
+            margin-top: 10px;
+        }
+        canvas {
+            display: block;
+            background: #fff no-repeat center;
+            background-size: contain;
+            cursor: grab;
+        }
+        canvas:active {
+            cursor: grabbing;
+        }
+    </style>
+</head>
+<body>
+    <div class="signature-container">
+        <canvas id="imageCanvas" width="600" height="400"></canvas>
+        <p class="signature">这里是微信个性签名</p>
+    </div>
+    <script>
+        var canvas = document.getElementById('imageCanvas');
+        var ctx = canvas.getContext('2d');
+        var img = new Image();
+        img.onload = function() {
+            var scale = 1; // 初始缩放比例
+            var x = 0; // 初始X坐标
+            var y = 0; // 初始Y坐标
+            var dragging = false;
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+            }
+
+            img.width = img.width; // 设置图片宽度
+            img.height = img.height; // 设置图片高度
+            draw();
+
+            canvas.addEventListener('mousedown', function(e) {
+                dragging = true;
+                var rect = canvas.getBoundingClientRect();
+                x = e.clientX - rect.left;
+                y = e.clientY - rect.top;
+                e.preventDefault();
+            });
+
+            canvas.addEventListener('mousemove', function(e) {
+                if (dragging) {
+                    var rect = canvas.getBoundingClientRect();
+                    x = e.clientX - rect.left;
+                    y = e.clientY - rect.top;
+                    draw();
+                }
+            });
+
+            canvas.addEventListener('mouseup', function(e) {
+                dragging = false;
+            });
+
+            canvas.addEventListener('wheel', function(e) {
+                var rect = canvas.getBoundingClientRect();
+                var scaleChange = e.deltaY > 0 ? 1.1 : 0.9; // 向上滚动放大，向下滚动缩小
+                scale *= scaleChange;
+                draw();
+                e.preventDefault();
+            });
+        };
+        img.src = 'your-image-url.jpg'; // 替换为你的图片URL
+    </script>
+</body>
+</html>
